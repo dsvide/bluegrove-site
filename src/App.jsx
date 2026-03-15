@@ -2,14 +2,10 @@ import { useState, useEffect, useRef } from "react";
 
 const IMG = {
   hero: "/hero.jpg",
-  sardinia: "https://images.pexels.com/photos/1750566/pexels-photo-1750566.jpeg?auto=compress&cs=tinysrgb&w=900",
-  grove1: "https://images.pexels.com/photos/5503108/pexels-photo-5503108.jpeg?auto=compress&cs=tinysrgb&w=900",
-  olives: "https://images.pexels.com/photos/4198023/pexels-photo-4198023.jpeg?auto=compress&cs=tinysrgb&w=900",
+  sardinia: "https://images.pexels.com/photos/1750566/pexels-photo-1750566.jpeg?auto=compress&cs=tinysrgb&w=1200",
   oil: "https://images.pexels.com/photos/33587/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=900",
-  landscape: "https://images.pexels.com/photos/1480690/pexels-photo-1480690.jpeg?auto=compress&cs=tinysrgb&w=900",
-  tree: "https://images.pexels.com/photos/6267/menu-restaurant-vintage-table.jpg?auto=compress&cs=tinysrgb&w=900",
-  table: "https://images.pexels.com/photos/1115251/pexels-photo-1115251.jpeg?auto=compress&cs=tinysrgb&w=900",
-  // Custom photos
+  olives: "https://images.pexels.com/photos/4198023/pexels-photo-4198023.jpeg?auto=compress&cs=tinysrgb&w=900",
+  grove1: "https://images.pexels.com/photos/5503108/pexels-photo-5503108.jpeg?auto=compress&cs=tinysrgb&w=900",
   gPaesaggio: "/paesaggio.jpg",
   gPasta: "/pasta.jpg",
   gRaccoglitura: "/raccoglitura.jpg",
@@ -17,12 +13,18 @@ const IMG = {
 };
 
 const C = {
-  bg: "#F4F2EC", warm: "#ECEADF", dark: "#181B1A",
-  accent: "#3B5755", blue: "#2A4858",
-  gold: "#C4A96A", muted: "#888880", cream: "#F7F5EF",
+  bg: "#F5F3ED",
+  warm: "#EDEAE0",
+  dark: "#161918",
+  accent: "#3B5755",
+  gold: "#C4A96A",
+  goldLight: "rgba(196,169,106,.12)",
+  muted: "#7A7870",
+  cream: "#F8F5EE",
+  border: "rgba(0,0,0,.07)",
 };
 
-function useV(th = 0.08) {
+function useV(th = 0.06) {
   const ref = useRef(null);
   const [v, setV] = useState(false);
   useEffect(() => {
@@ -42,15 +44,20 @@ function A({ children, d = 0, style: s = {} }) {
   return (
     <div ref={ref} style={{
       ...s, opacity: v ? 1 : 0,
-      transform: v ? "translateY(0)" : "translateY(28px)",
-      transition: `opacity .8s cubic-bezier(.16,1,.3,1) ${d}s, transform .8s cubic-bezier(.16,1,.3,1) ${d}s`,
+      transform: v ? "translateY(0)" : "translateY(32px)",
+      transition: `opacity .9s cubic-bezier(.16,1,.3,1) ${d}s, transform .9s cubic-bezier(.16,1,.3,1) ${d}s`,
     }}>{children}</div>
   );
 }
 
-const Tag = ({ children }) => (
-  <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 9.5, letterSpacing: 5, textTransform: "uppercase", color: C.accent, display: "flex", alignItems: "center", gap: 14, marginBottom: 18 }}>
-    <span style={{ width: 24, height: 1, background: C.gold, opacity: .5 }} />
+const Label = ({ children, light = false }) => (
+  <div style={{
+    fontFamily: "'Outfit',sans-serif",
+    fontSize: 9, letterSpacing: 6, textTransform: "uppercase",
+    color: light ? "rgba(248,245,238,.4)" : C.gold,
+    display: "flex", alignItems: "center", gap: 16, marginBottom: 22,
+  }}>
+    <span style={{ width: 32, height: 1, background: light ? "rgba(248,245,238,.2)" : C.gold, opacity: .5 }} />
     {children}
   </div>
 );
@@ -58,20 +65,52 @@ const Tag = ({ children }) => (
 function Nav() {
   const [s, setS] = useState(false);
   useEffect(() => {
-    const h = () => setS(window.scrollY > 60);
+    const h = () => setS(window.scrollY > 80);
     window.addEventListener("scroll", h, { passive: true });
     return () => window.removeEventListener("scroll", h);
   }, []);
   return (
-    <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 999, padding: s ? "14px 48px" : "28px 48px", display: "flex", justifyContent: "space-between", alignItems: "center", background: s ? "rgba(244,242,236,.96)" : "transparent", backdropFilter: s ? "blur(20px)" : "none", borderBottom: s ? "1px solid rgba(0,0,0,.04)" : "none", transition: "all .5s ease" }}>
-      <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 19, fontWeight: 500, letterSpacing: 5, textTransform: "uppercase", color: s ? C.dark : C.cream, transition: "color .5s" }}>Blue Grove</span>
-      <div style={{ display: "flex", gap: 28 }}>
+    <nav style={{
+      position: "fixed", top: 0, left: 0, right: 0, zIndex: 999,
+      padding: s ? "16px 60px" : "32px 60px",
+      display: "flex", justifyContent: "space-between", alignItems: "center",
+      background: s ? "rgba(245,243,237,.97)" : "transparent",
+      backdropFilter: s ? "blur(24px)" : "none",
+      borderBottom: s ? `1px solid ${C.border}` : "none",
+      transition: "all .5s cubic-bezier(.16,1,.3,1)",
+    }}>
+      <span style={{
+        fontFamily: "'Cormorant Garamond',serif",
+        fontSize: 20, fontWeight: 500, letterSpacing: 7, textTransform: "uppercase",
+        color: s ? C.dark : C.cream, transition: "color .5s",
+      }}>Blue Grove</span>
+      <div style={{ display: "flex", gap: 36, alignItems: "center" }}>
         {["Origin", "Shop", "Verify"].map(t => (
-          <a key={t} href={`#${t.toLowerCase()}`} style={{ fontFamily: "'Outfit',sans-serif", fontSize: 10, letterSpacing: 2.5, textTransform: "uppercase", textDecoration: "none", color: s ? C.muted : "rgba(247,245,239,.4)", transition: "color .3s" }}
+          <a key={t} href={`#${t.toLowerCase()}`} style={{
+            fontFamily: "'Outfit',sans-serif", fontSize: 9.5, letterSpacing: 3,
+            textTransform: "uppercase", textDecoration: "none",
+            color: s ? C.muted : "rgba(248,245,238,.35)", transition: "color .3s",
+          }}
             onMouseEnter={e => e.target.style.color = s ? C.dark : C.cream}
-            onMouseLeave={e => e.target.style.color = s ? C.muted : "rgba(247,245,239,.4)"}
+            onMouseLeave={e => e.target.style.color = s ? C.muted : "rgba(248,245,238,.35)"}
           >{t}</a>
         ))}
+        <a href="#shop" style={{
+          fontFamily: "'Outfit',sans-serif", fontSize: 9, letterSpacing: 2.5,
+          textTransform: "uppercase", textDecoration: "none",
+          padding: "10px 24px",
+          background: s ? C.dark : "transparent",
+          color: s ? C.cream : "rgba(248,245,238,.6)",
+          border: s ? `1px solid ${C.dark}` : "1px solid rgba(248,245,238,.2)",
+          transition: "all .4s ease",
+        }}
+          onMouseEnter={e => { e.target.style.background = C.accent; e.target.style.borderColor = C.accent; e.target.style.color = C.cream; }}
+          onMouseLeave={e => {
+            e.target.style.background = s ? C.dark : "transparent";
+            e.target.style.borderColor = s ? C.dark : "rgba(248,245,238,.2)";
+            e.target.style.color = s ? C.cream : "rgba(248,245,238,.6)";
+          }}
+        >Order Now</a>
       </div>
     </nav>
   );
@@ -79,24 +118,92 @@ function Nav() {
 
 function Hero() {
   const [r, setR] = useState(false);
-  useEffect(() => { setTimeout(() => setR(true), 300); }, []);
+  useEffect(() => { setTimeout(() => setR(true), 200); }, []);
   return (
-    <section style={{ height: "100vh", position: "relative", overflow: "hidden", background: C.dark }}>
-      <div style={{ position: "absolute", inset: -30, backgroundImage: `url(${IMG.hero})`, backgroundSize: "cover", backgroundPosition: "center 40%", opacity: r ? .4 : 0, transform: r ? "scale(1.02)" : "scale(1.12)", transition: "opacity 2s ease, transform 3s ease" }} />
-      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(24,27,26,.3) 0%, transparent 40%, rgba(24,27,26,.65) 100%)" }} />
-      <div style={{ position: "relative", zIndex: 2, height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", padding: "0 48px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 32, opacity: r ? 1 : 0, transition: "opacity .8s ease .5s" }}>
-          <span style={{ width: 40, height: 1, background: "rgba(247,245,239,.2)" }} />
-          <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 10, letterSpacing: 6, textTransform: "uppercase", color: "rgba(247,245,239,.35)" }}>From Sardinia's Blue Zone</span>
-          <span style={{ width: 40, height: 1, background: "rgba(247,245,239,.2)" }} />
+    <section style={{ height: "100vh", minHeight: 700, position: "relative", overflow: "hidden", background: C.dark }}>
+      <div style={{
+        position: "absolute", inset: -40,
+        backgroundImage: `url(${IMG.hero})`,
+        backgroundSize: "cover", backgroundPosition: "center 35%",
+        opacity: r ? .38 : 0,
+        transform: r ? "scale(1.0)" : "scale(1.1)",
+        transition: "opacity 2.5s ease, transform 4s ease",
+      }} />
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(160deg, rgba(22,25,24,.5) 0%, rgba(22,25,24,.1) 45%, rgba(22,25,24,.7) 100%)" }} />
+      <div style={{
+        position: "absolute", left: 36, bottom: 60, zIndex: 3,
+        display: "flex", flexDirection: "column", alignItems: "center", gap: 14,
+        opacity: r ? 1 : 0, transition: "opacity 1s ease 2s",
+      }}>
+        <div style={{ width: 1, height: 60, background: "rgba(248,245,238,.12)" }} />
+        <span style={{
+          fontFamily: "'Outfit',sans-serif", fontSize: 8, letterSpacing: 4,
+          textTransform: "uppercase", color: "rgba(248,245,238,.25)",
+          writingMode: "vertical-rl", transform: "rotate(180deg)",
+        }}>Villacidro · Sardinia · 2026</span>
+      </div>
+      <div style={{
+        position: "relative", zIndex: 2, height: "100%",
+        display: "flex", flexDirection: "column",
+        justifyContent: "center", alignItems: "center",
+        textAlign: "center", padding: "0 60px",
+      }}>
+        <div style={{
+          display: "flex", alignItems: "center", gap: 20, marginBottom: 40,
+          opacity: r ? 1 : 0, transition: "opacity 1s ease .6s",
+        }}>
+          <span style={{ width: 48, height: 1, background: "rgba(196,169,106,.3)" }} />
+          <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 9, letterSpacing: 7, textTransform: "uppercase", color: "rgba(248,245,238,.3)" }}>Sardinia's Blue Zone</span>
+          <span style={{ width: 48, height: 1, background: "rgba(196,169,106,.3)" }} />
         </div>
-        <h1 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "clamp(56px,10vw,140px)", fontWeight: 400, color: C.cream, lineHeight: .88, margin: 0, letterSpacing: 5, opacity: r ? 1 : 0, transform: r ? "translateY(0)" : "translateY(60px)", transition: "all 1.2s cubic-bezier(.16,1,.3,1) .7s" }}>Blue Grove</h1>
-        <div style={{ width: 1, height: r ? 44 : 0, background: C.gold, opacity: .35, margin: "28px auto", transition: "height .8s ease 1.4s" }} />
-        <p style={{ fontFamily: "'Outfit',sans-serif", fontSize: 13, letterSpacing: 1.5, color: "rgba(247,245,239,.35)", lineHeight: 1.9, maxWidth: 340, opacity: r ? 1 : 0, transition: "opacity .8s ease 1.6s" }}>Extra virgin olive oil from the land where people live the longest</p>
-        <a href="#origin" style={{ marginTop: 40, fontFamily: "'Outfit',sans-serif", fontSize: 9.5, letterSpacing: 4, textTransform: "uppercase", color: C.cream, textDecoration: "none", padding: "16px 44px", border: "1px solid rgba(247,245,239,.12)", transition: "all .4s ease", opacity: r ? 1 : 0 }}
-          onMouseEnter={e => { e.target.style.background = "rgba(247,245,239,.06)"; e.target.style.borderColor = "rgba(247,245,239,.3)"; }}
-          onMouseLeave={e => { e.target.style.background = "transparent"; e.target.style.borderColor = "rgba(247,245,239,.12)"; }}
-        >Discover</a>
+        <h1 style={{
+          fontFamily: "'Cormorant Garamond',serif",
+          fontSize: "clamp(72px,12vw,160px)",
+          fontWeight: 300, color: C.cream,
+          lineHeight: .85, margin: 0, letterSpacing: 4,
+          opacity: r ? 1 : 0,
+          transform: r ? "translateY(0)" : "translateY(70px)",
+          transition: "all 1.4s cubic-bezier(.16,1,.3,1) .8s",
+        }}>Blue<br /><em style={{ fontStyle: "italic", fontWeight: 400, color: C.gold }}>Grove</em></h1>
+        <div style={{
+          width: 1, height: r ? 56 : 0,
+          background: "rgba(196,169,106,.25)", margin: "36px auto",
+          transition: "height 1s ease 1.8s",
+        }} />
+        <p style={{
+          fontFamily: "'Outfit',sans-serif", fontSize: 12, letterSpacing: 2,
+          color: "rgba(248,245,238,.3)", lineHeight: 2.2,
+          maxWidth: 320, margin: "0 0 48px",
+          opacity: r ? 1 : 0, transition: "opacity 1s ease 2s",
+        }}>Extra virgin olive oil from the land<br />where people live the longest</p>
+        <div style={{ display: "flex", gap: 16, opacity: r ? 1 : 0, transition: "opacity 1s ease 2.2s" }}>
+          <a href="#origin" style={{
+            fontFamily: "'Outfit',sans-serif", fontSize: 9, letterSpacing: 4,
+            textTransform: "uppercase", color: C.cream, textDecoration: "none",
+            padding: "16px 44px", border: "1px solid rgba(248,245,238,.15)",
+            transition: "all .4s ease",
+          }}
+            onMouseEnter={e => { e.target.style.background = "rgba(248,245,238,.07)"; e.target.style.borderColor = "rgba(248,245,238,.35)"; }}
+            onMouseLeave={e => { e.target.style.background = "transparent"; e.target.style.borderColor = "rgba(248,245,238,.15)"; }}
+          >Discover</a>
+          <a href="#shop" style={{
+            fontFamily: "'Outfit',sans-serif", fontSize: 9, letterSpacing: 4,
+            textTransform: "uppercase", color: C.dark, textDecoration: "none",
+            padding: "16px 44px", background: C.gold, border: `1px solid ${C.gold}`,
+            transition: "all .4s ease",
+          }}
+            onMouseEnter={e => { e.target.style.background = "#b8983e"; e.target.style.borderColor = "#b8983e"; }}
+            onMouseLeave={e => { e.target.style.background = C.gold; e.target.style.borderColor = C.gold; }}
+          >Order Now</a>
+        </div>
+      </div>
+      <div style={{
+        position: "absolute", bottom: 40, left: "50%", transform: "translateX(-50%)",
+        zIndex: 3, display: "flex", flexDirection: "column", alignItems: "center", gap: 8,
+        opacity: r ? 1 : 0, transition: "opacity 1s ease 2.5s",
+      }}>
+        <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 7.5, letterSpacing: 3, textTransform: "uppercase", color: "rgba(248,245,238,.2)" }}>Scroll</span>
+        <div style={{ width: 1, height: 28, background: "rgba(248,245,238,.12)" }} />
       </div>
     </section>
   );
@@ -104,35 +211,89 @@ function Hero() {
 
 function Strip() {
   const [ref, v] = useV(.2);
+  const stats = [
+    { n: "5th", l: "Blue Zone on Earth", sub: "One of only five" },
+    { n: "100+", l: "Years of Life", sub: "Where centenarians are the norm" },
+    { n: "0.18%", l: "Acidity", sub: "Among the lowest recorded" },
+    { n: "412", l: "mg/kg Polyphenols", sub: "Exceptionally rich" },
+  ];
   return (
-    <section ref={ref} style={{ background: `linear-gradient(135deg, ${C.blue}, ${C.accent})`, padding: "48px", display: "flex", justifyContent: "center", gap: 90 }}>
-      {[{ n: "5", l: "Blue Zones" }, { n: "100+", l: "Years Lived" }, { n: "1", l: "Island" }].map((d, i) => (
-        <div key={i} style={{ textAlign: "center", opacity: v ? 1 : 0, transform: v ? "translateY(0)" : "translateY(14px)", transition: `all .6s ease ${.1 + i * .1}s` }}>
-          <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 40, color: C.cream, fontWeight: 300 }}>{d.n}</div>
-          <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 9, letterSpacing: 3, textTransform: "uppercase", color: "rgba(247,245,239,.3)", marginTop: 8 }}>{d.l}</div>
-        </div>
-      ))}
+    <section ref={ref} style={{ background: C.dark, padding: "64px 60px", borderTop: "1px solid rgba(255,255,255,.03)" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 0 }}>
+        {stats.map((d, i) => (
+          <div key={i} style={{
+            textAlign: "center", padding: "0 32px",
+            borderRight: i < 3 ? "1px solid rgba(255,255,255,.05)" : "none",
+            opacity: v ? 1 : 0, transform: v ? "translateY(0)" : "translateY(20px)",
+            transition: `all .7s cubic-bezier(.16,1,.3,1) ${i * .1}s`,
+          }}>
+            <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 52, color: C.gold, fontWeight: 300, lineHeight: 1 }}>{d.n}</div>
+            <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 10, letterSpacing: 2.5, textTransform: "uppercase", color: C.cream, marginTop: 12, marginBottom: 6 }}>{d.l}</div>
+            <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 10.5, color: "rgba(248,245,238,.25)", lineHeight: 1.6 }}>{d.sub}</div>
+          </div>
+        ))}
+      </div>
     </section>
   );
 }
 
 function Origin() {
   return (
-    <section id="origin" style={{ background: C.bg, padding: "clamp(80px,12vw,150px) 48px" }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "center" }}>
-        <div>
-          <A><Tag>Our Origin</Tag></A>
-          <A d={.08}><h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "clamp(34px,3.8vw,52px)", fontWeight: 400, color: C.dark, lineHeight: 1.12, margin: "0 0 32px" }}>Where the land teaches longevity</h2></A>
-          <A d={.16}><p style={{ fontFamily: "'Outfit',sans-serif", fontSize: 14, lineHeight: 2.1, color: C.muted, margin: "0 0 18px" }}>In the hills of Villacidro, in Sardinia's Blue Zone, olive trees have stood for centuries. The people who tend them live longer than almost anyone on earth.</p></A>
-          <A d={.24}><p style={{ fontFamily: "'Outfit',sans-serif", fontSize: 14.5, lineHeight: 2, color: C.dark, margin: 0 }}>This is not just oil. It is the taste of a longer, slower, more intentional life.</p></A>
-        </div>
-        <A d={.1}>
-          <div style={{ position: "relative" }}>
-            <img src={IMG.sardinia} alt="Villacidro" style={{ width: "100%", height: 520, objectFit: "cover" }} />
-            <div style={{ position: "absolute", top: -14, left: -14, width: "100%", height: "100%", border: `1px solid ${C.gold}`, opacity: .18, pointerEvents: "none" }} />
-            <p style={{ marginTop: 16, fontFamily: "'Cormorant Garamond',serif", fontSize: 13, fontStyle: "italic", color: C.gold, opacity: .55 }}>Villacidro, Medio Campidano — Sardinia</p>
-          </div>
+    <section id="origin" style={{ background: C.bg, padding: "clamp(100px,14vw,180px) 60px" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+        <A style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 80 }}>
+          <Label>Our Origin</Label>
+          <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 13, fontStyle: "italic", color: C.gold, opacity: .5 }}>Villacidro · Sardinia</span>
         </A>
+        <A d={.06}>
+          <h2 style={{
+            fontFamily: "'Cormorant Garamond',serif",
+            fontSize: "clamp(44px,6vw,86px)",
+            fontWeight: 300, color: C.dark,
+            lineHeight: 1.05, margin: "0 0 64px", letterSpacing: 1, maxWidth: 820,
+          }}>
+            Where time moves slower,<br />
+            <em style={{ fontStyle: "italic", color: C.accent }}>and lives run longer.</em>
+          </h2>
+        </A>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "start" }}>
+          <div>
+            <A d={.1}>
+              <p style={{ fontFamily: "'Outfit',sans-serif", fontSize: 15, lineHeight: 2.2, color: C.muted, margin: "0 0 28px" }}>
+                Sardinia is one of five Blue Zones on earth — places where people routinely live past 100. In the hills of Villacidro, the olive trees are as old as the traditions that surround them. The oil they produce has been part of this longevity for generations.
+              </p>
+            </A>
+            <A d={.16}>
+              <p style={{ fontFamily: "'Outfit',sans-serif", fontSize: 15, lineHeight: 2.2, color: C.muted, margin: "0 0 48px" }}>
+                Every bottle of Blue Grove is cold-pressed within hours of harvest. No shortcuts. No additives. Just olives, stone, and time — the same way it has always been done.
+              </p>
+            </A>
+            <A d={.22}>
+              <div style={{ borderLeft: `2px solid ${C.gold}`, paddingLeft: 24 }}>
+                <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 22, fontStyle: "italic", color: C.dark, lineHeight: 1.7, margin: 0 }}>
+                  "This is not just oil. It is the taste of a longer, slower, more intentional life."
+                </p>
+              </div>
+            </A>
+          </div>
+          <A d={.12}>
+            <div style={{ position: "relative" }}>
+              <img src={IMG.sardinia} alt="Villacidro" style={{ width: "100%", height: 560, objectFit: "cover" }} />
+              <div style={{
+                position: "absolute", top: -16, right: -16,
+                width: "100%", height: "100%",
+                border: `1px solid ${C.gold}`, opacity: .15, pointerEvents: "none",
+              }} />
+              <div style={{
+                position: "absolute", bottom: 0, left: 0, right: 0,
+                padding: "60px 28px 28px",
+                background: "linear-gradient(to top, rgba(22,25,24,.65), transparent)",
+              }}>
+                <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 13, fontStyle: "italic", color: "rgba(248,245,238,.5)", margin: 0 }}>Villacidro, Medio Campidano — Sardinia</p>
+              </div>
+            </div>
+          </A>
+        </div>
       </div>
     </section>
   );
@@ -141,29 +302,74 @@ function Origin() {
 function Gallery() {
   const [h, setH] = useState(null);
   const pics = [
-    { src: IMG.gUlivo,        cap: "Ulivo centenario" },
-    { src: IMG.gRaccoglitura, cap: "Raccoglitura a mano" },
-    { src: IMG.gPaesaggio,    cap: "Paesaggio sardo" },
-    { src: IMG.gPasta,        cap: "Dalla terra alla tavola" },
+    { src: IMG.gUlivo,        cap: "Ulivo centenario",        pos: "center center" },
+    { src: IMG.gRaccoglitura, cap: "Raccoglitura a mano",     pos: "center 30%" },
+    { src: IMG.gPasta,        cap: "Dalla terra alla tavola", pos: "center center" },
+    { src: IMG.gPaesaggio,    cap: "Paesaggio sardo",         pos: "center 60%" },
   ];
   const grid = [
-    { gridColumn: "1/7",  gridRow: "1/3" },
-    { gridColumn: "7/13", gridRow: "1/2" },
-    { gridColumn: "1/7",  gridRow: "3/5" },
-    { gridColumn: "7/13", gridRow: "2/4" },
+    { gridColumn: "1/5",  gridRow: "1/4" },
+    { gridColumn: "5/13", gridRow: "1/3" },
+    { gridColumn: "5/9",  gridRow: "3/5" },
+    { gridColumn: "9/13", gridRow: "3/5" },
   ];
   return (
-    <section style={{ background: C.bg, padding: "clamp(60px,8vw,120px) 48px" }}>
+    <section style={{ background: C.dark, padding: "clamp(80px,10vw,140px) 60px" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-        <A><Tag>The Grove</Tag></A>
-        <A d={.06}><h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "clamp(28px,3vw,42px)", fontWeight: 400, color: C.dark, margin: "0 0 40px" }}>From the grove to your table</h2></A>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(12,1fr)", gridAutoRows: 220, gap: 6 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 56 }}>
+          <div>
+            <A><Label light>The Grove</Label></A>
+            <A d={.06}>
+              <h2 style={{
+                fontFamily: "'Cormorant Garamond',serif",
+                fontSize: "clamp(36px,5vw,64px)",
+                fontWeight: 300, color: C.cream, lineHeight: 1.05, margin: 0, letterSpacing: 1,
+              }}>From the grove<br /><em style={{ fontStyle: "italic", color: C.gold }}>to your table.</em></h2>
+            </A>
+          </div>
+          <A d={.1} style={{ maxWidth: 340 }}>
+            <p style={{ fontFamily: "'Outfit',sans-serif", fontSize: 13.5, lineHeight: 2, color: "rgba(248,245,238,.35)", margin: 0, textAlign: "right" }}>
+              Sardinia's air is among the cleanest in Europe. Its soil untouched by industry. Its microclimate shaped over millennia. A land that doesn't just grow food — it sustains life.
+            </p>
+          </A>
+        </div>
+        <A d={.14}>
+          <div style={{
+            display: "grid", gridTemplateColumns: "1fr 1fr",
+            gap: "0 72px", marginBottom: 48, paddingBottom: 48,
+            borderBottom: "1px solid rgba(255,255,255,.05)",
+          }}>
+            <p style={{ fontFamily: "'Outfit',sans-serif", fontSize: 14, lineHeight: 2.1, color: "rgba(248,245,238,.4)", margin: 0 }}>
+              In Villacidro, at the heart of Sardinia's Blue Zone, families have pressed oil from the same trees for generations. Centenarians here are not an exception — they are a tradition.
+            </p>
+            <p style={{ fontFamily: "'Outfit',sans-serif", fontSize: 14, lineHeight: 2.1, color: "rgba(248,245,238,.4)", margin: 0 }}>
+              Every olive we harvest carries that legacy. Pure air, ancient roots, a microclimate unlike anywhere else on earth. This is where extraordinary oil is born — and where extraordinary lives are lived.
+            </p>
+          </div>
+        </A>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(12,1fr)", gridAutoRows: 200, gap: 6 }}>
           {pics.map((p, i) => (
-            <A key={i} d={i * .05} style={{ ...grid[i], position: "relative", overflow: "hidden", cursor: "pointer" }}>
-              <div style={{ width: "100%", height: "100%" }} onMouseEnter={() => setH(i)} onMouseLeave={() => setH(null)}>
-                <img src={p.src} alt={p.cap} style={{ width: "100%", height: "100%", objectFit: "cover", transform: h === i ? "scale(1.04)" : "scale(1)", transition: "transform .7s ease" }} />
-                <div style={{ position: "absolute", inset: 0, background: h === i ? "linear-gradient(to top,rgba(24,27,26,.6),transparent 55%)" : "transparent", transition: "background .4s", display: "flex", alignItems: "flex-end", padding: 20 }}>
-                  <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 10, letterSpacing: 1.5, textTransform: "uppercase", color: C.cream, opacity: h === i ? 1 : 0, transition: "opacity .3s" }}>{p.cap}</span>
+            <A key={i} d={i * .06} style={{ ...grid[i], position: "relative", overflow: "hidden" }}>
+              <div style={{ width: "100%", height: "100%", cursor: "pointer" }}
+                onMouseEnter={() => setH(i)} onMouseLeave={() => setH(null)}>
+                <img src={p.src} alt={p.cap} style={{
+                  width: "100%", height: "100%", objectFit: "cover",
+                  objectPosition: p.pos,
+                  transform: h === i ? "scale(1.05)" : "scale(1)",
+                  transition: "transform .8s cubic-bezier(.16,1,.3,1)",
+                  filter: h === i ? "brightness(1)" : "brightness(.82)",
+                }} />
+                <div style={{
+                  position: "absolute", inset: 0,
+                  background: h === i ? "linear-gradient(to top, rgba(22,25,24,.7), transparent 60%)" : "transparent",
+                  transition: "background .4s",
+                  display: "flex", alignItems: "flex-end", padding: 20,
+                }}>
+                  <span style={{
+                    fontFamily: "'Outfit',sans-serif", fontSize: 9.5, letterSpacing: 2.5,
+                    textTransform: "uppercase", color: C.cream,
+                    opacity: h === i ? 1 : 0, transition: "opacity .3s",
+                  }}>{p.cap}</span>
                 </div>
               </div>
             </A>
@@ -177,15 +383,21 @@ function Gallery() {
 function Shop() {
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
+  const [thumb, setThumb] = useState(0);
+  const thumbs = [IMG.oil, IMG.olives, IMG.grove1, IMG.sardinia];
   return (
-    <section id="shop" style={{ background: C.warm, padding: "clamp(80px,10vw,140px) 48px" }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 70, alignItems: "start" }}>
+    <section id="shop" style={{ background: C.bg, padding: "clamp(100px,12vw,160px) 60px" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "start" }}>
         <A>
           <div>
-            <img src={IMG.oil} alt="Blue Grove EVOO" style={{ width: "100%", height: 500, objectFit: "cover" }} />
-            <div style={{ display: "flex", gap: 6, marginTop: 8 }}>
-              {[IMG.oil, IMG.olives, IMG.grove1, IMG.sardinia].map((src, i) => (
-                <div key={i} style={{ width: "25%", height: 70, overflow: "hidden", border: i === 0 ? `2px solid ${C.gold}` : "2px solid transparent", opacity: i === 0 ? 1 : .5 }}>
+            <img src={thumbs[thumb]} alt="Blue Grove EVOO" style={{ width: "100%", height: 520, objectFit: "cover" }} />
+            <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+              {thumbs.map((src, i) => (
+                <div key={i} onClick={() => setThumb(i)} style={{
+                  width: "25%", height: 72, overflow: "hidden", cursor: "pointer",
+                  border: i === thumb ? `2px solid ${C.gold}` : "2px solid transparent",
+                  opacity: i === thumb ? 1 : .45, transition: "all .3s",
+                }}>
                   <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 </div>
               ))}
@@ -193,41 +405,62 @@ function Shop() {
           </div>
         </A>
         <div>
-          <A><Tag>Our Product</Tag></A>
-          <A d={.06}><h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "clamp(28px,3vw,42px)", fontWeight: 400, color: C.dark, margin: "0 0 6px" }}>Extra Virgin Olive Oil</h2></A>
-          <A d={.1}><div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 15, fontStyle: "italic", color: C.muted, marginBottom: 20 }}>Bosana Cultivar — Villacidro, Sardinia</div></A>
-          <A d={.14}><div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 24 }}>
-            <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 40, color: C.dark }}>£20</span>
-            <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 12, color: C.muted }}>250ml</span>
-          </div></A>
-          <A d={.18}><p style={{ fontFamily: "'Outfit',sans-serif", fontSize: 14, lineHeight: 2, color: C.muted, margin: "0 0 28px" }}>Single-origin extra virgin from century-old Bosana olive trees. Cold-pressed within hours. Rich, peppery, with notes of green almond. Every bottle NFC-verified.</p></A>
+          <A><Label>Our Product</Label></A>
+          <A d={.06}>
+            <h2 style={{
+              fontFamily: "'Cormorant Garamond',serif",
+              fontSize: "clamp(38px,4vw,58px)",
+              fontWeight: 300, color: C.dark, lineHeight: 1.05, margin: "0 0 8px", letterSpacing: .5,
+            }}>Extra Virgin<br /><em style={{ fontStyle: "italic", color: C.accent }}>Olive Oil</em></h2>
+          </A>
+          <A d={.1}>
+            <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 15, fontStyle: "italic", color: C.muted, marginBottom: 28 }}>Bosana Cultivar — Villacidro, Sardinia</div>
+          </A>
+          <A d={.14}>
+            <div style={{ display: "flex", alignItems: "baseline", gap: 14, marginBottom: 28, paddingBottom: 28, borderBottom: `1px solid ${C.border}` }}>
+              <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 52, color: C.dark, fontWeight: 300 }}>£20</span>
+              <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 12, color: C.muted, letterSpacing: 1 }}>/ 250ml bottle</span>
+            </div>
+          </A>
+          <A d={.18}>
+            <p style={{ fontFamily: "'Outfit',sans-serif", fontSize: 14, lineHeight: 2.2, color: C.muted, margin: "0 0 32px" }}>
+              Single-origin extra virgin from century-old Bosana olive trees. Cold-pressed within hours. Rich, peppery, with notes of green almond. Every bottle NFC-verified from grove to door.
+            </p>
+          </A>
           <A d={.22}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 28 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1, marginBottom: 32, border: `1px solid ${C.border}` }}>
               {[
                 { t: "Single Origin", d: "100% Bosana, Villacidro" },
                 { t: "Cold Pressed", d: "Within 4 hours of harvest" },
                 { t: "NFC Verified", d: "Scan to trace the journey" },
-                { t: "Extra Virgin", d: "Acidity under 0.3%" },
+                { t: "Extra Virgin", d: "Acidity 0.18%" },
               ].map((f, i) => (
-                <div key={i} style={{ padding: "14px 16px", background: "rgba(0,0,0,.02)", border: "1px solid rgba(0,0,0,.04)" }}>
-                  <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 11.5, fontWeight: 500, color: C.dark }}>{f.t}</div>
+                <div key={i} style={{ padding: "16px 18px", background: C.bg, borderRight: i % 2 === 0 ? `1px solid ${C.border}` : "none", borderBottom: i < 2 ? `1px solid ${C.border}` : "none" }}>
+                  <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 10.5, fontWeight: 500, color: C.dark, letterSpacing: .5, marginBottom: 4 }}>{f.t}</div>
                   <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 10.5, color: C.muted }}>{f.d}</div>
                 </div>
               ))}
             </div>
           </A>
           <A d={.26}>
-            <div style={{ display: "flex", gap: 10, marginBottom: 16 }}>
-              <div style={{ display: "flex", border: "1px solid rgba(0,0,0,.1)" }}>
-                <button onClick={() => setQty(Math.max(1, qty - 1))} style={{ width: 44, height: 48, border: "none", background: "transparent", fontSize: 16, cursor: "pointer" }}>-</button>
-                <div style={{ width: 44, height: 48, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Outfit',sans-serif", fontSize: 14, fontWeight: 500, borderLeft: "1px solid rgba(0,0,0,.06)", borderRight: "1px solid rgba(0,0,0,.06)" }}>{qty}</div>
-                <button onClick={() => setQty(Math.min(10, qty + 1))} style={{ width: 44, height: 48, border: "none", background: "transparent", fontSize: 16, cursor: "pointer" }}>+</button>
+            <div style={{ display: "flex", gap: 12 }}>
+              <div style={{ display: "flex", border: `1px solid ${C.border}` }}>
+                <button onClick={() => setQty(Math.max(1, qty - 1))} style={{ width: 48, height: 52, border: "none", background: "transparent", fontSize: 18, cursor: "pointer", color: C.dark }}>−</button>
+                <div style={{ width: 48, height: 52, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Outfit',sans-serif", fontSize: 15, fontWeight: 500, color: C.dark, borderLeft: `1px solid ${C.border}`, borderRight: `1px solid ${C.border}` }}>{qty}</div>
+                <button onClick={() => setQty(Math.min(10, qty + 1))} style={{ width: 48, height: 52, border: "none", background: "transparent", fontSize: 18, cursor: "pointer", color: C.dark }}>+</button>
               </div>
-              <button onClick={() => { setAdded(true); setTimeout(() => setAdded(false), 2500); }}
-                style={{ flex: 1, height: 48, background: added ? C.accent : C.dark, border: "none", color: C.cream, fontFamily: "'Outfit',sans-serif", fontSize: 10.5, letterSpacing: 2.5, textTransform: "uppercase", cursor: "pointer", transition: "background .3s" }}
+              <button
+                onClick={() => { setAdded(true); setTimeout(() => setAdded(false), 2500); }}
+                style={{
+                  flex: 1, height: 52,
+                  background: added ? C.accent : C.dark,
+                  border: "none", color: C.cream,
+                  fontFamily: "'Outfit',sans-serif", fontSize: 9.5, letterSpacing: 3,
+                  textTransform: "uppercase", cursor: "pointer", transition: "background .4s",
+                }}
                 onMouseEnter={e => { if (!added) e.target.style.background = C.accent; }}
                 onMouseLeave={e => { if (!added) e.target.style.background = C.dark; }}
-              >{added ? "Added!" : "Add to Bag"}</button>
+              >{added ? "✓  Added to Bag" : "Add to Bag"}</button>
             </div>
           </A>
         </div>
@@ -239,24 +472,43 @@ function Shop() {
 function Verify() {
   const [active, setActive] = useState(0);
   return (
-    <section id="verify" style={{ background: C.bg, padding: "clamp(80px,10vw,140px) 48px" }}>
+    <section id="verify" style={{ background: C.warm, padding: "clamp(100px,12vw,160px) 60px" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "center" }}>
         <div>
-          <A><Tag>Verified Authenticity</Tag></A>
-          <A d={.08}><h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "clamp(28px,3vw,42px)", fontWeight: 400, color: C.dark, margin: "0 0 18px" }}>The only oil you can verify</h2></A>
-          <A d={.14}><p style={{ fontFamily: "'Outfit',sans-serif", fontSize: 14, lineHeight: 2, color: C.muted, margin: "0 0 32px" }}>80% of extra virgin oil worldwide is adulterated. Blue Grove is different. Every bottle carries NFC + QR verification.</p></A>
+          <A><Label>Verified Authenticity</Label></A>
+          <A d={.08}>
+            <h2 style={{
+              fontFamily: "'Cormorant Garamond',serif",
+              fontSize: "clamp(36px,4vw,56px)",
+              fontWeight: 300, color: C.dark, lineHeight: 1.08, margin: "0 0 20px", letterSpacing: .5,
+            }}>The only oil<br /><em style={{ fontStyle: "italic", color: C.accent }}>you can verify.</em></h2>
+          </A>
+          <A d={.14}>
+            <p style={{ fontFamily: "'Outfit',sans-serif", fontSize: 14, lineHeight: 2.1, color: C.muted, margin: "0 0 40px" }}>
+              80% of extra virgin oil worldwide is adulterated. Blue Grove is different. Every bottle carries NFC + QR verification — scan it, and trace every step from tree to table.
+            </p>
+          </A>
           {[
-            { n: "01", t: "Scan", d: "Tap your phone or scan the QR code" },
-            { n: "02", t: "Trace", d: "See grove, harvest date, chemical analysis" },
-            { n: "03", t: "Trust", d: "Immutable data. No fraud. Just truth." },
+            { n: "01", t: "Scan", d: "Tap your phone to the NFC chip or scan the QR code on the bottle." },
+            { n: "02", t: "Trace", d: "See the grove location, harvest date, press time, and full chemical analysis." },
+            { n: "03", t: "Trust", d: "Immutable data. No intermediaries. No fraud. Just truth." },
           ].map((s, i) => (
-            <A key={i} d={.2 + i * .06}>
-              <div onClick={() => setActive(i)} style={{ padding: "16px 20px", marginBottom: 8, cursor: "pointer", background: active === i ? "rgba(196,169,106,.06)" : "transparent", borderLeft: `2px solid ${active === i ? C.gold : "rgba(0,0,0,.05)"}`, transition: "all .3s" }}>
-                <div style={{ display: "flex", alignItems: "baseline", gap: 12 }}>
-                  <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 24, color: active === i ? C.gold : "rgba(0,0,0,.07)", transition: "color .3s" }}>{s.n}</span>
+            <A key={i} d={.2 + i * .07}>
+              <div onClick={() => setActive(i)} style={{
+                padding: "20px 24px", marginBottom: 6, cursor: "pointer",
+                background: active === i ? C.goldLight : "transparent",
+                borderLeft: `2px solid ${active === i ? C.gold : C.border}`,
+                transition: "all .3s",
+              }}>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 16 }}>
+                  <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 26, color: active === i ? C.gold : "rgba(0,0,0,.08)", transition: "color .3s", minWidth: 32 }}>{s.n}</span>
                   <div>
-                    <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 20, color: C.dark }}>{s.t}</div>
-                    <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 12.5, color: C.muted, lineHeight: 1.7, maxHeight: active === i ? 60 : 0, opacity: active === i ? 1 : 0, overflow: "hidden", transition: "all .4s ease", marginTop: active === i ? 6 : 0 }}>{s.d}</div>
+                    <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 22, color: C.dark }}>{s.t}</div>
+                    <div style={{
+                      fontFamily: "'Outfit',sans-serif", fontSize: 13, color: C.muted, lineHeight: 1.8,
+                      maxHeight: active === i ? 80 : 0, opacity: active === i ? 1 : 0,
+                      overflow: "hidden", transition: "all .4s ease", marginTop: active === i ? 6 : 0,
+                    }}>{s.d}</div>
                   </div>
                 </div>
               </div>
@@ -264,9 +516,10 @@ function Verify() {
           ))}
         </div>
         <A d={.15}>
-          <div style={{ background: C.dark, padding: "40px 32px", textAlign: "center" }}>
-            <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 8, letterSpacing: 2.5, textTransform: "uppercase", color: "rgba(247,245,239,.2)", marginBottom: 24 }}>Verification Preview</div>
-            <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 20, color: C.cream, marginBottom: 20 }}>Blue Grove - Lot #0001</div>
+          <div style={{ background: C.dark, padding: "44px 36px" }}>
+            <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 7.5, letterSpacing: 3, textTransform: "uppercase", color: "rgba(248,245,238,.18)", marginBottom: 28 }}>Verification Preview</div>
+            <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 22, color: C.cream, marginBottom: 4 }}>Blue Grove</div>
+            <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 10, color: C.gold, letterSpacing: 2, marginBottom: 28 }}>Lot #0001 · 2026 Harvest</div>
             {[
               ["Grove", "Villacidro, Sardinia"],
               ["Cultivar", "Bosana"],
@@ -275,13 +528,14 @@ function Verify() {
               ["Acidity", "0.18%"],
               ["Polyphenols", "412 mg/kg"],
             ].map(([k, val], i) => (
-              <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "10px 0", borderBottom: "1px solid rgba(247,245,239,.04)" }}>
-                <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 10.5, color: "rgba(247,245,239,.3)", letterSpacing: 1, textTransform: "uppercase" }}>{k}</span>
-                <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 11.5, color: "rgba(247,245,239,.6)" }}>{val}</span>
+              <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 0", borderBottom: "1px solid rgba(248,245,238,.05)" }}>
+                <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 10, color: "rgba(248,245,238,.28)", letterSpacing: 1.5, textTransform: "uppercase" }}>{k}</span>
+                <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 12, color: "rgba(248,245,238,.7)" }}>{val}</span>
               </div>
             ))}
-            <div style={{ marginTop: 22, padding: "10px 24px", border: "1px solid rgba(196,169,106,.2)", display: "inline-block" }}>
-              <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 9, letterSpacing: 2.5, textTransform: "uppercase", color: C.gold }}>Verified Authentic</span>
+            <div style={{ marginTop: 28, padding: "12px 28px", border: `1px solid rgba(196,169,106,.25)`, display: "inline-flex", alignItems: "center", gap: 10 }}>
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: C.gold, display: "inline-block" }} />
+              <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 9, letterSpacing: 3, textTransform: "uppercase", color: C.gold }}>Verified Authentic</span>
             </div>
           </div>
         </A>
@@ -294,34 +548,68 @@ function Join() {
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
   return (
-    <section style={{ background: C.dark, padding: "clamp(80px,10vw,120px) 48px", textAlign: "center" }}>
-      <A><h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "clamp(28px,3.5vw,44px)", fontWeight: 400, color: C.cream, margin: "0 0 12px" }}>The first harvest arrives soon</h2></A>
-      <A d={.08}><p style={{ fontFamily: "'Outfit',sans-serif", fontSize: 14, color: "rgba(247,245,239,.35)", maxWidth: 400, margin: "0 auto 36px", lineHeight: 1.8 }}>Join the list for early access to our extra virgin olive oil from Sardinia Blue Zone.</p></A>
-      <A d={.14}>
-        {!done ? (
-          <div style={{ display: "inline-flex", maxWidth: 460, width: "100%" }}>
-            <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="your@email.com" style={{ flex: 1, padding: "18px 22px", background: "rgba(255,255,255,.05)", border: "1px solid rgba(255,255,255,.06)", borderRight: "none", color: "#fff", fontFamily: "'Outfit',sans-serif", fontSize: 13, outline: "none" }} />
-            <button onClick={() => email && setDone(true)} style={{ padding: "18px 36px", background: C.accent, border: "none", color: C.cream, fontFamily: "'Outfit',sans-serif", fontSize: 10, letterSpacing: 2.5, textTransform: "uppercase", cursor: "pointer" }}>Notify Me</button>
-          </div>
-        ) : (
-          <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 20, fontStyle: "italic", color: C.gold }}>Thank you. We will be in touch.</div>
-        )}
-      </A>
+    <section style={{ background: C.dark, padding: "clamp(100px,12vw,160px) 60px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+      <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${IMG.sardinia})`, backgroundSize: "cover", backgroundPosition: "center", opacity: .04 }} />
+      <div style={{ position: "relative", zIndex: 2 }}>
+        <A><Label light>Early Access</Label></A>
+        <A d={.08}>
+          <h2 style={{
+            fontFamily: "'Cormorant Garamond',serif",
+            fontSize: "clamp(38px,5.5vw,72px)",
+            fontWeight: 300, color: C.cream, lineHeight: 1.1, margin: "0 0 16px",
+          }}>The first harvest<br /><em style={{ fontStyle: "italic", color: C.gold }}>arrives soon.</em></h2>
+        </A>
+        <A d={.14}>
+          <p style={{ fontFamily: "'Outfit',sans-serif", fontSize: 14, color: "rgba(248,245,238,.35)", maxWidth: 420, margin: "0 auto 48px", lineHeight: 2 }}>
+            Join the list for early access, harvest news, and the story behind every bottle.
+          </p>
+        </A>
+        <A d={.2}>
+          {!done ? (
+            <div style={{ display: "inline-flex", maxWidth: 480, width: "100%" }}>
+              <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="your@email.com" style={{
+                flex: 1, padding: "18px 24px",
+                background: "rgba(255,255,255,.04)",
+                border: "1px solid rgba(255,255,255,.07)", borderRight: "none",
+                color: "#fff", fontFamily: "'Outfit',sans-serif", fontSize: 13, outline: "none",
+              }} />
+              <button onClick={() => email && setDone(true)} style={{
+                padding: "18px 40px",
+                background: C.gold, border: `1px solid ${C.gold}`,
+                color: C.dark, fontFamily: "'Outfit',sans-serif",
+                fontSize: 9, letterSpacing: 3, textTransform: "uppercase",
+                cursor: "pointer", transition: "all .3s",
+              }}
+                onMouseEnter={e => { e.target.style.background = "#b8983e"; }}
+                onMouseLeave={e => { e.target.style.background = C.gold; }}
+              >Notify Me</button>
+            </div>
+          ) : (
+            <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 24, fontStyle: "italic", color: C.gold }}>Thank you. We will be in touch.</div>
+          )}
+        </A>
+      </div>
     </section>
   );
 }
 
 function Footer() {
   return (
-    <footer style={{ background: "#111413", padding: "40px 48px 28px" }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 15, letterSpacing: 3, textTransform: "uppercase", color: "rgba(247,245,239,.3)" }}>Blue Grove</span>
-        <div style={{ display: "flex", gap: 24 }}>
-          {["Instagram", "TikTok"].map(s => (
-            <a key={s} href="#" style={{ fontFamily: "'Outfit',sans-serif", fontSize: 11, color: "rgba(247,245,239,.2)", textDecoration: "none" }}>{s}</a>
-          ))}
+    <footer style={{ background: "#0F1110", padding: "48px 60px 32px" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingBottom: 28, borderBottom: "1px solid rgba(255,255,255,.04)" }}>
+          <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 18, letterSpacing: 5, textTransform: "uppercase", color: "rgba(248,245,238,.25)" }}>Blue Grove</span>
+          <div style={{ display: "flex", gap: 32 }}>
+            {["Instagram", "TikTok"].map(s => (
+              <a key={s} href="#" style={{ fontFamily: "'Outfit',sans-serif", fontSize: 10, color: "rgba(248,245,238,.2)", textDecoration: "none", letterSpacing: 1.5, textTransform: "uppercase" }}>{s}</a>
+            ))}
+          </div>
+          <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 9.5, color: "rgba(248,245,238,.1)", letterSpacing: .5 }}>Villacidro, Sardinia</span>
         </div>
-        <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 10, color: "rgba(247,245,239,.1)" }}>2026 Blue Grove. Sardinia.</span>
+        <div style={{ paddingTop: 20, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 9.5, color: "rgba(248,245,238,.1)" }}>© 2026 Blue Grove. All rights reserved.</span>
+          <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 9.5, color: "rgba(248,245,238,.1)" }}>Extra Virgin Olive Oil · NFC Verified</span>
+        </div>
       </div>
     </footer>
   );
@@ -331,14 +619,14 @@ export default function BlueGrove() {
   return (
     <div style={{ background: C.bg }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Outfit:wght@300;400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Outfit:wght@300;400;500&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
-        body { background: #F4F2EC; overflow-x: hidden; }
-        ::selection { background: rgba(59,87,85,.18); }
-        ::-webkit-scrollbar { width: 3px; }
-        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,.06); border-radius: 2px; }
-        @media (max-width: 900px) { nav > div:last-child { display: none !important; } }
+        body { background: #F5F3ED; overflow-x: hidden; }
+        ::selection { background: rgba(196,169,106,.2); }
+        ::-webkit-scrollbar { width: 2px; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,.08); }
+        @media (max-width: 960px) { nav > div:last-child { display: none !important; } }
       `}</style>
       <Nav />
       <Hero />
