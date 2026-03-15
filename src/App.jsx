@@ -9,6 +9,11 @@ const IMG = {
   landscape: "https://images.pexels.com/photos/1480690/pexels-photo-1480690.jpeg?auto=compress&cs=tinysrgb&w=900",
   tree: "https://images.pexels.com/photos/6267/menu-restaurant-vintage-table.jpg?auto=compress&cs=tinysrgb&w=900",
   table: "https://images.pexels.com/photos/1115251/pexels-photo-1115251.jpeg?auto=compress&cs=tinysrgb&w=900",
+  // Custom photos
+  gPaesaggio: "/paesaggio.jpg",
+  gPasta: "/pasta.jpg",
+  gRaccoglitura: "/raccoglitura.jpg",
+  gUlivo: "/ulivocentenario.jpg",
 };
 
 const C = {
@@ -136,29 +141,28 @@ function Origin() {
 function Gallery() {
   const [h, setH] = useState(null);
   const pics = [
-    { src: IMG.grove1, cap: "Ancient olive groves" },
-    { src: IMG.olives, cap: "Hand-picked olives" },
-    { src: IMG.oil, cap: "Cold-pressed, same day" },
-    { src: IMG.tree, cap: "From grove to table" },
-    { src: IMG.table, cap: "Mediterranean tradition" },
-    { src: IMG.landscape, cap: "The hills of Campidano" },
+    { src: IMG.gUlivo,        cap: "Ulivo centenario" },
+    { src: IMG.gRaccoglitura, cap: "Raccoglitura a mano" },
+    { src: IMG.gPaesaggio,    cap: "Paesaggio sardo" },
+    { src: IMG.gPasta,        cap: "Dalla terra alla tavola" },
   ];
   const grid = [
-    { gridColumn: "1/8", gridRow: "1/3" }, { gridColumn: "8/13", gridRow: "1/2" },
-    { gridColumn: "8/13", gridRow: "2/3" }, { gridColumn: "1/5", gridRow: "3/5" },
-    { gridColumn: "5/9", gridRow: "3/5" }, { gridColumn: "9/13", gridRow: "3/5" },
+    { gridColumn: "1/7",  gridRow: "1/3" },
+    { gridColumn: "7/13", gridRow: "1/2" },
+    { gridColumn: "1/7",  gridRow: "3/5" },
+    { gridColumn: "7/13", gridRow: "2/4" },
   ];
   return (
     <section style={{ background: C.bg, padding: "clamp(60px,8vw,120px) 48px" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         <A><Tag>The Grove</Tag></A>
-        <A d={.06}><h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "clamp(28px,3vw,42px)", fontWeight: 400, color: C.dark, margin: "0 0 40px" }}>Our world in images</h2></A>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(12,1fr)", gridAutoRows: 200, gap: 6 }}>
+        <A d={.06}><h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "clamp(28px,3vw,42px)", fontWeight: 400, color: C.dark, margin: "0 0 40px" }}>From the grove to your table</h2></A>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(12,1fr)", gridAutoRows: 220, gap: 6 }}>
           {pics.map((p, i) => (
-            <A key={i} d={i * .04} style={{ ...grid[i], position: "relative", overflow: "hidden", cursor: "pointer" }}>
+            <A key={i} d={i * .05} style={{ ...grid[i], position: "relative", overflow: "hidden", cursor: "pointer" }}>
               <div style={{ width: "100%", height: "100%" }} onMouseEnter={() => setH(i)} onMouseLeave={() => setH(null)}>
                 <img src={p.src} alt={p.cap} style={{ width: "100%", height: "100%", objectFit: "cover", transform: h === i ? "scale(1.04)" : "scale(1)", transition: "transform .7s ease" }} />
-                <div style={{ position: "absolute", inset: 0, background: h === i ? "linear-gradient(to top,rgba(24,27,26,.5),transparent 50%)" : "transparent", transition: "background .4s", display: "flex", alignItems: "flex-end", padding: 16 }}>
+                <div style={{ position: "absolute", inset: 0, background: h === i ? "linear-gradient(to top,rgba(24,27,26,.6),transparent 55%)" : "transparent", transition: "background .4s", display: "flex", alignItems: "flex-end", padding: 20 }}>
                   <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 10, letterSpacing: 1.5, textTransform: "uppercase", color: C.cream, opacity: h === i ? 1 : 0, transition: "opacity .3s" }}>{p.cap}</span>
                 </div>
               </div>
