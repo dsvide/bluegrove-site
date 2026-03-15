@@ -109,7 +109,7 @@ function Nav() {
         {/* Desktop links */}
         {!isMobile && (
           <div style={{ display: "flex", gap: 36, alignItems: "center" }}>
-            {["Origin", "Shop", "Verify"].map(t => (
+            {["Origin", "Shop", "Restaurant", "Verify"].map(t => (
               <a key={t} href={`#${t.toLowerCase()}`} style={{
                 fontFamily: "'Outfit',sans-serif", fontSize: 9.5, letterSpacing: 3,
                 textTransform: "uppercase", textDecoration: "none",
@@ -171,12 +171,12 @@ function Nav() {
           pointerEvents: menuOpen ? "all" : "none",
           transition: "opacity .4s ease",
         }}>
-          {["Origin", "Shop", "Verify"].map(t => (
+          {["Origin", "Shop", "Restaurant", "Verify"].map(t => (
             <a key={t} href={`#${t.toLowerCase()}`}
               onClick={() => setMenuOpen(false)}
               style={{
                 fontFamily: "'Cormorant Garamond',serif",
-                fontSize: 42, fontWeight: 300, color: C.cream,
+                fontSize: 38, fontWeight: 300, color: C.cream,
                 textDecoration: "none", letterSpacing: 2,
               }}>{t}</a>
           ))}
@@ -346,102 +346,280 @@ function ShopBanner() {
 }
 
 function Shop() {
-  const [qty, setQty] = useState(1);
+  const [selected, setSelected] = useState(1);
   const [added, setAdded] = useState(false);
-  const [thumb, setThumb] = useState(0);
   const isMobile = useMedia("(max-width: 768px)");
-  const thumbs = [IMG.oil, IMG.olives, IMG.grove1, IMG.sardinia];
+
+  const options = [
+    { qty: 1, label: "Single Bottle", size: "250ml", price: 20, badge: null },
+    { qty: 3, label: "Grove Bundle", size: "3 × 250ml", price: 54, badge: "Save £6", popular: true },
+    { qty: 6, label: "Full Case",    size: "6 × 250ml", price: 100, badge: "Save £20" },
+  ];
+
+  const chosen = options.find(o => o.qty === selected);
 
   return (
     <section id="shop" style={{ background: C.bg, padding: isMobile ? "60px 24px" : "clamp(100px,12vw,160px) 60px" }}>
-      <div style={{
-        maxWidth: 1100, margin: "0 auto",
-        display: "grid",
-        gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
-        gap: isMobile ? 40 : 80, alignItems: "start",
-      }}>
-        {/* Images */}
-        <A>
-          <div>
-            <img src={thumbs[thumb]} alt="Blue Grove EVOO" style={{ width: "100%", height: isMobile ? 320 : 520, objectFit: "cover" }} />
-            <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-              {thumbs.map((src, i) => (
-                <div key={i} onClick={() => setThumb(i)} style={{
-                  width: "25%", height: isMobile ? 60 : 72, overflow: "hidden", cursor: "pointer",
-                  border: i === thumb ? `2px solid ${C.gold}` : "2px solid transparent",
-                  opacity: i === thumb ? 1 : .45, transition: "all .3s",
-                }}>
-                  <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                </div>
-              ))}
-            </div>
+      <div style={{ maxWidth: 680, margin: "0 auto" }}>
+
+        <A><Label>Our Product</Label></A>
+        <A d={.06}>
+          <h2 style={{
+            fontFamily: "'Cormorant Garamond',serif",
+            fontSize: isMobile ? "clamp(36px,9vw,52px)" : "clamp(38px,4vw,58px)",
+            fontWeight: 300, color: C.dark, lineHeight: 1.05, margin: "0 0 6px",
+          }}>Extra Virgin<br /><em style={{ fontStyle: "italic", color: C.accent }}>Olive Oil</em></h2>
+        </A>
+        <A d={.08}>
+          <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 14, fontStyle: "italic", color: C.muted, marginBottom: 36 }}>
+            Premium Unfiltered · Bosana Cultivar · Villacidro, Sardinia
+          </p>
+        </A>
+
+        {/* Features */}
+        <A d={.1}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1, marginBottom: 40, border: `1px solid ${C.border}` }}>
+            {[
+              { t: "Single Origin", d: "100% Bosana, Villacidro" },
+              { t: "Cold Pressed", d: "Within 4 hours of harvest" },
+              { t: "NFC Verified", d: "Scan to trace every step" },
+              { t: "Unfiltered", d: "Acidity 0.18% · Polyphenols 412 mg/kg" },
+            ].map((f, i) => (
+              <div key={i} style={{
+                padding: "16px 18px", background: C.bg,
+                borderRight: i % 2 === 0 ? `1px solid ${C.border}` : "none",
+                borderBottom: i < 2 ? `1px solid ${C.border}` : "none",
+              }}>
+                <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 10.5, fontWeight: 500, color: C.dark, marginBottom: 4 }}>{f.t}</div>
+                <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 10, color: C.muted }}>{f.d}</div>
+              </div>
+            ))}
           </div>
         </A>
 
-        {/* Product info */}
-        <div>
-          <A><Label>Our Product</Label></A>
-          <A d={.06}>
-            <h2 style={{
-              fontFamily: "'Cormorant Garamond',serif",
-              fontSize: isMobile ? "clamp(36px,9vw,52px)" : "clamp(38px,4vw,58px)",
-              fontWeight: 300, color: C.dark, lineHeight: 1.05, margin: "0 0 8px",
-            }}>Extra Virgin<br /><em style={{ fontStyle: "italic", color: C.accent }}>Olive Oil</em></h2>
-          </A>
-          <A d={.08}>
-            <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 14, fontStyle: "italic", color: C.muted, marginBottom: 24 }}>Bosana Cultivar — Villacidro, Sardinia</div>
-          </A>
-          <A d={.12}>
-            <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 24, paddingBottom: 24, borderBottom: `1px solid ${C.border}` }}>
-              <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: isMobile ? 44 : 52, color: C.dark, fontWeight: 300 }}>£20</span>
-              <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 12, color: C.muted }}>/ 250ml bottle</span>
-            </div>
-          </A>
-          <A d={.16}>
-            <p style={{ fontFamily: "'Outfit',sans-serif", fontSize: 14, lineHeight: 2.1, color: C.muted, margin: "0 0 28px" }}>
-              Single-origin extra virgin from century-old Bosana olive trees. Cold-pressed within hours. Rich, peppery, with notes of green almond. Every bottle NFC-verified from grove to door.
+        {/* Options */}
+        <A d={.14}>
+          <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 9, letterSpacing: 4, textTransform: "uppercase", color: C.muted, marginBottom: 14 }}>Select option</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 32 }}>
+            {options.map(o => (
+              <div key={o.qty} onClick={() => setSelected(o.qty)} style={{
+                display: "flex", justifyContent: "space-between", alignItems: "center",
+                padding: "18px 20px", cursor: "pointer",
+                border: `1.5px solid ${selected === o.qty ? C.gold : C.border}`,
+                background: selected === o.qty ? C.goldLight : "transparent",
+                transition: "all .25s",
+                position: "relative",
+              }}>
+                {o.popular && (
+                  <div style={{
+                    position: "absolute", top: -10, left: 20,
+                    background: C.accent, color: C.cream,
+                    fontFamily: "'Outfit',sans-serif", fontSize: 7.5, letterSpacing: 2.5,
+                    textTransform: "uppercase", padding: "3px 10px",
+                  }}>Most Popular</div>
+                )}
+                <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                  <div style={{
+                    width: 18, height: 18, borderRadius: "50%",
+                    border: `1.5px solid ${selected === o.qty ? C.gold : C.border}`,
+                    background: selected === o.qty ? C.gold : "transparent",
+                    transition: "all .25s", flexShrink: 0,
+                  }} />
+                  <div>
+                    <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 12, fontWeight: 500, color: C.dark }}>{o.label}</div>
+                    <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 10.5, color: C.muted, marginTop: 2 }}>{o.size}</div>
+                  </div>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  {o.badge && (
+                    <span style={{
+                      fontFamily: "'Outfit',sans-serif", fontSize: 9, letterSpacing: 1.5,
+                      textTransform: "uppercase", color: C.accent,
+                      background: "rgba(59,87,85,.08)", padding: "3px 8px",
+                    }}>{o.badge}</span>
+                  )}
+                  <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 26, color: C.dark, fontWeight: 300 }}>£{o.price}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </A>
+
+        {/* CTA */}
+        <A d={.18}>
+          <button
+            onClick={() => { setAdded(true); setTimeout(() => setAdded(false), 2500); }}
+            style={{
+              width: "100%", height: 58,
+              background: added ? C.accent : C.dark,
+              border: "none", color: C.cream,
+              fontFamily: "'Outfit',sans-serif", fontSize: 11, letterSpacing: 3,
+              textTransform: "uppercase", cursor: "pointer", transition: "background .4s",
+            }}
+            onMouseEnter={e => { if (!added) e.target.style.background = C.accent; }}
+            onMouseLeave={e => { if (!added) e.target.style.background = C.dark; }}
+          >{added ? `✓  Added to Bag — £${chosen.price}` : `Add to Bag — £${chosen.price}`}</button>
+          <p style={{ fontFamily: "'Outfit',sans-serif", fontSize: 10.5, color: C.muted, marginTop: 14, textAlign: "center" }}>
+            🔒 Secure checkout · Free shipping over £60 · 30-day returns
+          </p>
+        </A>
+      </div>
+    </section>
+  );
+}
+
+function Restaurant() {
+  const isMobile = useMedia("(max-width: 768px)");
+  const [selected, setSelected] = useState(0);
+  const [submitted, setSubmitted] = useState(false);
+  const [form, setForm] = useState({ name: "", restaurant: "", email: "", phone: "", notes: "" });
+
+  const formats = [
+    { id: 0, name: "Starter Case",    desc: "12 × 500ml bottles",  price: "£180",  unit: "£15 / bottle",  badge: null },
+    { id: 1, name: "Restaurant Case", desc: "24 × 500ml bottles",  price: "£320",  unit: "£13.30 / bottle", badge: "Most Popular" },
+    { id: 2, name: "3L Catering Tin", desc: "4 × 3L tins",         price: "£260",  unit: "£65 / tin",     badge: null },
+    { id: 3, name: "5L Catering Tin", desc: "4 × 5L tins",         price: "£380",  unit: "£95 / tin",     badge: "Best Value" },
+  ];
+
+  const handleSubmit = () => {
+    if (form.name && form.restaurant && form.email) setSubmitted(true);
+  };
+
+  const inputStyle = {
+    width: "100%", padding: "14px 16px",
+    background: C.bg, border: `1px solid ${C.border}`,
+    fontFamily: "'Outfit',sans-serif", fontSize: 13, color: C.dark,
+    outline: "none", borderRadius: 0,
+    boxSizing: "border-box",
+  };
+
+  return (
+    <section id="restaurant" style={{ background: C.dark, padding: isMobile ? "60px 24px" : "clamp(100px,12vw,160px) 60px" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+
+        {/* Header */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: isMobile ? 40 : 64, flexDirection: isMobile ? "column" : "row", gap: isMobile ? 20 : 0 }}>
+          <div>
+            <A><Label light>For Restaurants</Label></A>
+            <A d={.06}>
+              <h2 style={{
+                fontFamily: "'Cormorant Garamond',serif",
+                fontSize: isMobile ? "clamp(34px,9vw,52px)" : "clamp(38px,5vw,62px)",
+                fontWeight: 300, color: C.cream, lineHeight: 1.05, margin: 0,
+              }}>Supply your kitchen<br /><em style={{ fontStyle: "italic", color: C.gold }}>with the best.</em></h2>
+            </A>
+          </div>
+          <A d={.1} style={{ maxWidth: 320 }}>
+            <p style={{ fontFamily: "'Outfit',sans-serif", fontSize: 13, lineHeight: 2, color: "rgba(248,245,238,.4)", margin: 0, textAlign: isMobile ? "left" : "right" }}>
+              Wholesale pricing for restaurants, hotels and delis. Consistent supply, NFC-verified quality, direct from Sardinia.
             </p>
           </A>
-          <A d={.2}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1, marginBottom: 28, border: `1px solid ${C.border}` }}>
-              {[
-                { t: "Single Origin", d: "100% Bosana, Villacidro" },
-                { t: "Cold Pressed", d: "Within 4 hours" },
-                { t: "NFC Verified", d: "Scan to trace" },
-                { t: "Extra Virgin", d: "Acidity 0.18%" },
-              ].map((f, i) => (
-                <div key={i} style={{ padding: "14px 16px", background: C.bg, borderRight: i % 2 === 0 ? `1px solid ${C.border}` : "none", borderBottom: i < 2 ? `1px solid ${C.border}` : "none" }}>
-                  <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 10.5, fontWeight: 500, color: C.dark, marginBottom: 3 }}>{f.t}</div>
-                  <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 10, color: C.muted }}>{f.d}</div>
+        </div>
+
+        {/* Why us */}
+        <A d={.12}>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(4,1fr)", gap: 1, marginBottom: 48, border: "1px solid rgba(255,255,255,.06)" }}>
+            {[
+              { t: "Direct Supply", d: "No middlemen. Straight from grove to kitchen." },
+              { t: "NFC Verified", d: "Every batch traceable and certified." },
+              { t: "Consistent Stock", d: "Reserved allocation for wholesale clients." },
+              { t: "Flexible Formats", d: "Bottles or tins to suit your kitchen." },
+            ].map((f, i) => (
+              <div key={i} style={{
+                padding: "20px 18px",
+                borderRight: !isMobile && i < 3 ? "1px solid rgba(255,255,255,.06)" : "none",
+                borderBottom: isMobile && i < 2 ? "1px solid rgba(255,255,255,.06)" : "none",
+              }}>
+                <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 10.5, fontWeight: 500, color: C.cream, marginBottom: 6, letterSpacing: .5 }}>{f.t}</div>
+                <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 10.5, color: "rgba(248,245,238,.35)", lineHeight: 1.7 }}>{f.d}</div>
+              </div>
+            ))}
+          </div>
+        </A>
+
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: isMobile ? 40 : 64 }}>
+
+          {/* Format selector */}
+          <A d={.14}>
+            <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 9, letterSpacing: 4, textTransform: "uppercase", color: "rgba(248,245,238,.3)", marginBottom: 14 }}>Select format</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {formats.map(f => (
+                <div key={f.id} onClick={() => setSelected(f.id)} style={{
+                  padding: "18px 20px", cursor: "pointer",
+                  border: `1.5px solid ${selected === f.id ? C.gold : "rgba(255,255,255,.08)"}`,
+                  background: selected === f.id ? "rgba(196,169,106,.08)" : "transparent",
+                  transition: "all .25s", position: "relative",
+                }}>
+                  {f.badge && (
+                    <div style={{
+                      position: "absolute", top: -10, left: 16,
+                      background: C.gold, color: C.dark,
+                      fontFamily: "'Outfit',sans-serif", fontSize: 7.5, letterSpacing: 2,
+                      textTransform: "uppercase", padding: "3px 10px",
+                    }}>{f.badge}</div>
+                  )}
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                      <div style={{
+                        width: 16, height: 16, borderRadius: "50%", flexShrink: 0,
+                        border: `1.5px solid ${selected === f.id ? C.gold : "rgba(255,255,255,.2)"}`,
+                        background: selected === f.id ? C.gold : "transparent",
+                        transition: "all .25s",
+                      }} />
+                      <div>
+                        <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 12, fontWeight: 500, color: C.cream }}>{f.name}</div>
+                        <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 10.5, color: "rgba(248,245,238,.35)", marginTop: 2 }}>{f.desc} · {f.unit}</div>
+                      </div>
+                    </div>
+                    <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 26, color: C.gold, fontWeight: 300 }}>{f.price}</span>
+                  </div>
                 </div>
               ))}
             </div>
           </A>
-          <A d={.24}>
-            {/* Qty + Add to bag */}
-            <div style={{ display: "flex", gap: 10 }}>
-              <div style={{ display: "flex", border: `1px solid ${C.border}` }}>
-                <button onClick={() => setQty(Math.max(1, qty - 1))} style={{ width: isMobile ? 52 : 48, height: 56, border: "none", background: "transparent", fontSize: 20, cursor: "pointer", color: C.dark }}>−</button>
-                <div style={{ width: isMobile ? 52 : 48, height: 56, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Outfit',sans-serif", fontSize: 15, fontWeight: 500, color: C.dark, borderLeft: `1px solid ${C.border}`, borderRight: `1px solid ${C.border}` }}>{qty}</div>
-                <button onClick={() => setQty(Math.min(10, qty + 1))} style={{ width: isMobile ? 52 : 48, height: 56, border: "none", background: "transparent", fontSize: 20, cursor: "pointer", color: C.dark }}>+</button>
+
+          {/* Order form */}
+          <A d={.18}>
+            {!submitted ? (
+              <div>
+                <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 9, letterSpacing: 4, textTransform: "uppercase", color: "rgba(248,245,238,.3)", marginBottom: 14 }}>Your details</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                    <input placeholder="Your name" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} style={{ ...inputStyle }} />
+                    <input placeholder="Restaurant name" value={form.restaurant} onChange={e => setForm({ ...form, restaurant: e.target.value })} style={{ ...inputStyle }} />
+                  </div>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                    <input placeholder="Email address" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} style={{ ...inputStyle }} />
+                    <input placeholder="Phone (optional)" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} style={{ ...inputStyle }} />
+                  </div>
+                  <textarea placeholder="Any notes or special requirements..." value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })} rows={3} style={{ ...inputStyle, resize: "none", lineHeight: 1.8 }} />
+                  <button onClick={handleSubmit} style={{
+                    width: "100%", height: 54,
+                    background: form.name && form.restaurant && form.email ? C.gold : "rgba(255,255,255,.06)",
+                    border: "none", color: form.name && form.restaurant && form.email ? C.dark : "rgba(255,255,255,.2)",
+                    fontFamily: "'Outfit',sans-serif", fontSize: 10, letterSpacing: 3,
+                    textTransform: "uppercase", cursor: form.name && form.restaurant && form.email ? "pointer" : "default",
+                    transition: "all .3s", marginTop: 4,
+                  }}
+                    onMouseEnter={e => { if (form.name && form.restaurant && form.email) e.target.style.background = "#b8983e"; }}
+                    onMouseLeave={e => { if (form.name && form.restaurant && form.email) e.target.style.background = C.gold; }}
+                  >Send Wholesale Enquiry — {formats[selected].price}</button>
+                  <p style={{ fontFamily: "'Outfit',sans-serif", fontSize: 10, color: "rgba(248,245,238,.2)", textAlign: "center", lineHeight: 1.8 }}>
+                    We'll reply within 24 hours to confirm your order and arrange delivery.
+                  </p>
+                </div>
               </div>
-              <button
-                onClick={() => { setAdded(true); setTimeout(() => setAdded(false), 2500); }}
-                style={{
-                  flex: 1, height: 56,
-                  background: added ? C.accent : C.dark,
-                  border: "none", color: C.cream,
-                  fontFamily: "'Outfit',sans-serif", fontSize: isMobile ? 11 : 10, letterSpacing: 2.5,
-                  textTransform: "uppercase", cursor: "pointer", transition: "background .4s",
-                  minHeight: 56,
-                }}
-                onMouseEnter={e => { if (!added) e.target.style.background = C.accent; }}
-                onMouseLeave={e => { if (!added) e.target.style.background = C.dark; }}
-              >{added ? "✓  Added to Bag" : `Add to Bag — £${qty * 20}`}</button>
-            </div>
-            <p style={{ fontFamily: "'Outfit',sans-serif", fontSize: 10.5, color: C.muted, marginTop: 12, textAlign: "center" }}>
-              🔒 Secure checkout · Free shipping over £60 · 30-day returns
-            </p>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "100%", minHeight: 300, textAlign: "center", gap: 16 }}>
+                <div style={{ width: 48, height: 48, borderRadius: "50%", border: `1px solid ${C.gold}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <span style={{ color: C.gold, fontSize: 20 }}>✓</span>
+                </div>
+                <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 26, fontStyle: "italic", color: C.cream }}>Enquiry received.</div>
+                <p style={{ fontFamily: "'Outfit',sans-serif", fontSize: 12, color: "rgba(248,245,238,.35)", maxWidth: 260, lineHeight: 1.9 }}>
+                  Thank you, {form.name}. We'll be in touch within 24 hours.
+                </p>
+              </div>
+            )}
           </A>
         </div>
       </div>
@@ -796,6 +974,7 @@ export default function BlueGrove() {
       <ShopBanner />
       <Strip />
       <Shop />
+      <Restaurant />
       <Origin />
       <Gallery />
       <Verify />
